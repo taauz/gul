@@ -1,0 +1,38 @@
+{% extends "shop/panel/base.html" %}
+{% block panel %}
+<div class="pn-head">
+  <div><h1>{% if obj %}Tahrirlash: {{ obj }}{% else %}Yangi {{ cfg.single }}{% endif %}</h1></div>
+  <a class="btn ghost" href="{% url 'panel_list' key %}">← Ortga</a>
+</div>
+
+<div class="form-layout">
+  <form method="post" enctype="multipart/form-data" class="p-card p-form">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="form-err">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="form-grid">
+      {% for field in form %}
+      <div class="field {% if field.widget_type == 'textarea' or field.widget_type == 'clearablefile' or field.name == 'name' %}full{% endif %}">
+        {% if field.widget_type == 'checkbox' %}
+          <label class="chk">{{ field }} <span>{{ field.label }}</span></label>
+        {% else %}
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.name == "image" %}<span class="hint">Tavsiya: kvadratga yaqin, yorug' fon. Yuklagach avtomatik kvadrat shaklga keltiriladi.</span>{% endif %}
+        {% endif %}
+        {% if field.errors %}<div class="form-err">{{ field.errors|join:", " }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="form-actions">
+      <button class="btn primary" type="submit">Saqlash</button>
+      <a class="btn ghost" href="{% url 'panel_list' key %}">Bekor qilish</a>
+    </div>
+  </form>
+
+  <aside class="p-card preview-card">
+    <h2>Saytda shunday ko'rinadi</h2>
+    <div class="live" id="livePreview" data-kind="{{ cfg.kind }}"></div>
+    <p class="sub">Ranglarni o'zgartirsangiz, rasm shu yerda darhol yangilanadi. Haqiqiy surat yuklasangiz, saytda o'sha surat chiqadi.</p>
+  </aside>
+</div>
+{% endblock %}

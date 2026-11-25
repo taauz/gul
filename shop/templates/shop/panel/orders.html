@@ -1,0 +1,36 @@
+{% extends "shop/panel/base.html" %}
+{% load shop_extras %}
+{% block panel %}
+<div class="pn-head"><div><h1>Buyurtmalar</h1><p class="sub">Holatini o'zgartirish uchun tugmalarni bosing</p></div></div>
+
+<div class="tabs">
+  {% for t in tabs %}<a class="tab {% if t.key == current %}on{% endif %}" href="?status={{ t.key }}">{{ t.label }} <b>{{ t.n }}</b></a>{% endfor %}
+</div>
+
+{% for o in orders %}
+<article class="p-card order">
+  <header>
+    <div><b>#{{ o.id }} · {{ o.customer_name }}</b><span class="muted">{{ o.phone }} · {{ o.created_at|date:"d.m.Y H:i" }}</span></div>
+    <span class="pill st-{{ o.status }}">{{ o.get_status_display }}</span>
+  </header>
+  <ul class="o-items">
+    {% for it in o.items.all %}
+    <li><span>{{ it.name }} ×{{ it.qty }}{% if it.details %}<em>{{ it.details }}</em>{% endif %}</span><b>{{ it.price|money }}</b></li>
+    {% endfor %}
+  </ul>
+  <div class="o-meta">
+    <span>To'lov: <b>{{ o.get_payment_type_display }}</b> (olishda)</span>
+    <span>Manzil: <b>{{ o.address|default:"—" }}</b></span>
+    <span class="o-total">Jami: {{ o.total|money }}</span>
+  </div>
+  <form method="post" action="{% url 'panel_order_status' o.pk %}" class="o-actions">
+    {% csrf_token %}
+    {% for val, label in statuses %}{% if val != o.status %}
+    <button class="btn small {% if val == 'bekor' %}danger{% elif val == 'bajarildi' %}primary{% else %}ghost{% endif %}" name="status" value="{{ val }}">{{ label }}</button>
+    {% endif %}{% endfor %}
+  </form>
+</article>
+{% empty %}
+<p class="sub">Bu bo'limda buyurtmalar yo'q.</p>
+{% endfor %}
+{% endblock %}

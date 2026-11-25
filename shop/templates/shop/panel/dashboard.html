@@ -1,0 +1,53 @@
+{% extends "shop/panel/base.html" %}
+{% load shop_extras %}
+{% block panel %}
+<div class="pn-head">
+  <div><h1>Bosh sahifa</h1><p class="sub">Do'kon holati bir qarashda</p></div>
+  <a class="btn primary" href="{% url 'panel_new' 'flowers' %}">+ Yangi gul</a>
+</div>
+
+<div class="kpis">
+  <div class="kpi accent"><span>Yangi buyurtmalar</span><b>{{ stats.new_orders }}</b></div>
+  <div class="kpi"><span>Bugungi buyurtmalar</span><b>{{ stats.today_orders }}</b></div>
+  <div class="kpi"><span>Tushum (bajarilgan)</span><b class="sm">{{ stats.revenue|money }}</b></div>
+  <div class="kpi"><span>Mijozlar</span><b>{{ stats.customers }}</b></div>
+  <div class="kpi"><span>Vitrinadagi gullar</span><b>{{ stats.flowers }}</b></div>
+</div>
+
+<div class="pn-cols">
+  <section class="p-card">
+    <h2>So'nggi 7 kun (buyurtmalar)</h2>
+    <div class="bars">
+      {% for d in days %}
+      <div class="bar-col" title="{{ d.n }} ta · {{ d.s|money }}">
+        <span class="bar-n">{{ d.n }}</span>
+        <div class="bar-track"><div class="bar" style="height:{{ d.pct }}%"></div></div>
+        <span class="bar-l">{{ d.label }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="p-card">
+    <h2>So'nggi buyurtmalar</h2>
+    {% for o in recent %}
+    <div class="mini-order">
+      <div class="mo-main">
+        <b>#{{ o.id }} · {{ o.customer_name }}</b>
+        <span class="muted">{% for it in o.items.all %}{{ it.name }} ×{{ it.qty }}{% if not forloop.last %}, {% endif %}{% endfor %} · {{ o.total|money }}</span>
+      </div>
+      <span class="pill st-{{ o.status }}">{{ o.get_status_display }}</span>
+      {% if o.status == 'yangi' %}
+      <form method="post" action="{% url 'panel_order_status' o.pk %}">{% csrf_token %}
+        <input type="hidden" name="next" value="dashboard">
+        <button class="btn small" name="status" value="bajarildi">Bajarildi</button>
+      </form>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p class="sub">Hozircha buyurtmalar yo'q.</p>
+    {% endfor %}
+    <a class="link-btn" href="{% url 'panel_orders' %}">Barchasini ko'rish →</a>
+  </section>
+</div>
+{% endblock %}

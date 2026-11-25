@@ -1,0 +1,31 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}Gulzor — Boshqaruv paneli{% endblock %}
+{% block body_class %}panel-body{% endblock %}
+{% block content %}
+<div class="pn">
+  <aside class="pn-side">
+    <a class="pn-brand" href="{% url 'panel' %}">Gul<em>zor</em><small>boshqaruv paneli</small></a>
+    <nav class="pn-nav">
+      <a href="{% url 'panel' %}" class="{% if active == 'dashboard' %}on{% endif %}"><i>📊</i> Bosh sahifa</a>
+      <a href="{% url 'panel_orders' %}" class="{% if active == 'orders' %}on{% endif %}"><i>🧾</i> Buyurtmalar</a>
+      <a href="{% url 'panel_list' 'flowers' %}" class="{% if active == 'flowers' %}on{% endif %}"><i>💐</i> Buketlar</a>
+      <a href="{% url 'panel_list' 'types' %}" class="{% if active == 'types' %}on{% endif %}"><i>🌷</i> Dona gullar</a>
+      <a href="{% url 'panel_list' 'wraps' %}" class="{% if active == 'wraps' %}on{% endif %}"><i>🎀</i> Qadoqlar</a>
+      <a href="{% url 'panel_users' %}" class="{% if active == 'users' %}on{% endif %}"><i>👥</i> Mijozlar</a>
+    </nav>
+    <div class="pn-foot">
+      <a href="{% url 'home' %}">← Saytga qaytish</a>
+      <a href="/admin/">Django admin</a>
+    </div>
+  </aside>
+  <main class="pn-main">
+    {% if messages %}<div class="pn-msgs">{% for m in messages %}<div class="pn-msg {{ m.tags }}">{{ m }}</div>{% endfor %}</div>{% endif %}
+    {% block panel %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'shop/js/art.js' %}?v=4"></script>
+<script src="{% static 'shop/js/panel.js' %}?v=4"></script>
+{% endblock %}

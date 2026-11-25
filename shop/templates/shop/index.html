@@ -1,0 +1,188 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block content %}
+<div id="petals" aria-hidden="true"></div>
+
+<header class="site-header">
+  <a class="brand" href="#top">Gul<em>zor</em></a>
+  <nav>
+    <a class="nav-link" href="#shop">Buketlar</a>
+    <a class="nav-link" href="#builder">O'zingiz yasang</a>
+    <div class="orders-slot">
+      <button class="nav-link nav-drop-btn" id="openOrders" type="button">Buyurtmalarim</button>
+      <div class="orders-pop" id="ordersPop">
+        <div class="orders-pop-head">Buyurtmalarim</div>
+        <div class="orders-pop-body" id="ordersBody"></div>
+      </div>
+    </div>
+    <button class="cart-btn" id="openCartTop" type="button">Savat <span class="badge" id="badgeTop">0</span></button>
+    <div class="user-slot" id="userSlot"></div>
+  </nav>
+</header>
+
+<main id="top">
+<section class="hero wrap">
+  <div class="hero-text">
+    <span class="eyebrow">Qo'lda terilgan buketlar</span>
+    <h1>Har bir gulda bir maktub bor</h1>
+    <p>Buketlar shahringizga bugunoq yetkaziladi. Yoki o'zingiz xohlagan gullardan o'z dastangizni yig'ing va qadoq qog'ozini tanlang.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#shop">Buketlarni ko'rish</a>
+      <a class="btn ghost" href="#builder">O'zim yasayman</a>
+    </div>
+  </div>
+  <div class="hero-art" id="heroArt"></div>
+</section>
+
+<section class="shop wrap" id="shop">
+  <div class="section-head">
+    <div>
+      <h2>Bugungi buketlar</h2>
+      <p class="lead">Har birini bosib, batafsil ko'ring, baholang va fikr qoldiring.</p>
+    </div>
+    <label class="sort">
+      <span>Saralash</span>
+      <select id="sortSel">
+        <option value="new">Yangilari</option>
+        <option value="asc">Arzonroq</option>
+        <option value="desc">Qimmatroq</option>
+        <option value="rating">Reyting bo'yicha</option>
+      </select>
+    </label>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="builder wrap" id="builder">
+  <div class="section-head">
+    <div>
+      <h2>O'zingiz gul dastasi yasang</h2>
+      <p class="lead">Gullarni tanlang, qadoq qog'ozini belgilang — dasta jonli ko'rinishda yig'iladi.</p>
+    </div>
+  </div>
+  <div class="builder-wrap">
+    <div class="builder-preview">
+      <div class="preview-box" id="previewBox"></div>
+      <div class="preview-count" id="previewCount">Gul tanlanmagan</div>
+    </div>
+    <div class="builder-form">
+      <div class="type-grid" id="typeGrid"></div>
+      <div>
+        <h3 class="mini-title">Qadoq qog'ozi</h3>
+        <div class="wrap-options" id="wrapOptions"></div>
+      </div>
+      <div class="builder-bottom">
+        <div class="builder-total" id="builderTotal">Jami: 0 so'm</div>
+        <button class="btn primary" id="addCustom" type="button">Savatga qo'shish</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer wrap">
+  <span>© Gulzor — qo'lda terilgan gullar, yurakdan yetkazilgan.</span>
+</footer>
+
+<button class="fab-cart" id="openCartFab" type="button" aria-label="Savat">🧺<span class="badge" id="badgeFab">0</span></button>
+
+<button class="fab-music" id="musicBtn" type="button" aria-label="Musiqa">
+  <svg id="musicIconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  <svg id="musicIconPause" viewBox="0 0 24 24" hidden><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+</button>
+<audio id="bgMusic" loop preload="none">
+  <source src="{% static 'shop/audio/bg-music.m4a' %}" type="audio/mp4">
+</audio>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="cartDrawer" aria-label="Savat">
+  <div class="drawer-head"><h3>Savat</h3><button class="icon-btn" data-close type="button" aria-label="Yopish">✕</button></div>
+  <div class="drawer-body" id="cartBody"></div>
+  <div class="drawer-foot">
+    <div class="drawer-total"><span>Jami</span><span id="cartTotal">0 so'm</span></div>
+    <button class="btn primary block" id="goCheckout" type="button">Buyurtma berish</button>
+  </div>
+</aside>
+
+<div class="modal" id="checkoutModal" role="dialog" aria-modal="true">
+  <button class="icon-btn modal-close" data-close type="button" aria-label="Yopish">✕</button>
+  <h3>Buyurtmani rasmiylashtirish</h3>
+  <div class="field"><label for="cName">Ismingiz</label><input id="cName" placeholder="Ism Familiya"></div>
+  <div class="field"><label for="cPhone">Telefon raqam</label><input id="cPhone" inputmode="tel" placeholder="+998 90 000 00 00"></div>
+  <div class="field"><label for="cAddr">Manzil yoki "o'zim olib ketaman"</label><input id="cAddr" placeholder="Yetkazish manzili"></div>
+  <div class="field">
+    <label>To'lov turi (mahsulotni olishda to'lanadi)</label>
+    <div class="seg" id="payOpts">
+      <button type="button" class="seg-opt active" data-pay="Naqd">Naqd pul</button>
+      <button type="button" class="seg-opt" data-pay="Karta">Plastik karta</button>
+    </div>
+  </div>
+  <button class="btn primary block" id="submitOrder" type="button">Buyurtmani tasdiqlash</button>
+</div>
+
+<div class="modal product-modal" id="productModal" role="dialog" aria-modal="true">
+  <button class="icon-btn modal-close" data-close type="button" aria-label="Yopish">✕</button>
+  <div class="pm-art" id="pmArt"></div>
+  <div class="pm-body">
+    <h3 id="pmName"></h3>
+    <div class="pm-price" id="pmPrice"></div>
+    <div class="pm-rate" id="pmRate"></div>
+    <p class="pm-desc" id="pmDesc"></p>
+    <button class="btn primary" id="pmAdd" type="button">Savatga qo'shish</button>
+    <h4>Fikrlar</h4>
+    <div class="pm-comments" id="pmComments"></div>
+    <div class="comment-form">
+      <input id="pmText" maxlength="280" placeholder="Fikringizni yozing">
+      <button class="btn small" id="pmSend" type="button">Yuborish</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <button class="icon-btn modal-close" data-close type="button" aria-label="Yopish">✕</button>
+  <div class="auth-art" id="authArt"></div>
+  <div class="auth-body">
+    <div id="authStep1">
+      <h3 id="authTitle">Xush kelibsiz</h3>
+      <p class="auth-sub">Buyurtma berish, baho va fikr qoldirish uchun ro'yxatdan o'ting.</p>
+      <div id="gBtn" class="g-holder"></div>
+      <div class="divider"><span>yoki telefon raqam bilan</span></div>
+      <div class="field"><label for="aName">Ismingiz</label><input id="aName" autocomplete="given-name" placeholder="Masalan: Madina"></div>
+      <div class="field">
+        <label for="aPhone">Telefon raqam</label>
+        <div class="phone-input"><span>+998</span><input id="aPhone" inputmode="numeric" autocomplete="tel-national" placeholder="90 123 45 67"></div>
+      </div>
+      <div class="form-err" id="authErr1"></div>
+      <button class="btn primary block" id="authSend" type="button">Kod yuborish</button>
+      <p class="auth-note">Raqamingizga 6 xonali SMS kod yuboriladi.</p>
+    </div>
+    <div id="authStep2" hidden>
+      <h3>Kodni kiriting</h3>
+      <p class="auth-sub" id="authSent"></p>
+      <div class="otp" id="otp"></div>
+      <div class="dev-hint" id="devHint" hidden></div>
+      <div class="form-err" id="authErr2"></div>
+      <button class="btn primary block" id="authVerify" type="button">Tasdiqlash</button>
+      <div class="auth-links">
+        <button class="link-btn" id="authResend" type="button" disabled>Qayta yuborish</button>
+        <button class="link-btn" id="authBack" type="button">Raqamni o'zgartirish</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+{% csrf_token %}
+{{ me_data|json_script:"me-data" }}
+{{ config_data|json_script:"config-data" }}
+{{ flowers_data|json_script:"flowers-data" }}
+{{ types_data|json_script:"types-data" }}
+{{ wraps_data|json_script:"wraps-data" }}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'shop/js/art.js' %}?v=5"></script>
+<script src="{% static 'shop/js/site.js' %}?v=7"></script>
+{% endblock %}

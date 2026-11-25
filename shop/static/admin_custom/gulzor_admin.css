@@ -1,0 +1,81 @@
+/* Gulzor uchun Django admin ko'rinishini yumshoq, o'qish qulay ranglarga moslashtirish */
+:root{
+  --primary: #3c5844;
+  --secondary: #6b7d70;
+  --accent: #c9a54b;
+  --primary-fg: #fff;
+
+  --body-fg: #2c2a24;
+  --body-bg: #faf5ee;
+  --body-quiet-color: #6b6558;
+  --body-loud-color: #201f1b;
+
+  --header-color: #fff;
+  --header-branding-color: #fff;
+  --header-bg: #25392c;
+  --header-link-color: #fff;
+
+  --breadcrumbs-fg: #e7e2d8;
+  --breadcrumbs-link-fg: #fff;
+  --breadcrumbs-bg: #3c5844;
+
+  --link-fg: #7d3f55;
+  --link-hover-color: #d1849a;
+  --link-selected-fg: #7d3f55;
+
+  --hairline-color: #e4ddd0;
+  --border-color: #e4ddd0;
+
+  --error-fg: #c0392b;
+  --message-success-bg: #e3f2e7;
+  --message-warning-bg: #fbf1d6;
+  --message-error-bg: #fbe3e1;
+
+  --darkened-bg: #f2eade;
+  --selected-bg: #f6ecd9;
+  --selected-row: #fbf6ea;
+
+  --button-fg: #fff;
+  --button-bg: #3c5844;
+  --button-hover-bg: #2c4433;
+  --default-button-bg: #7d3f55;
+  --default-button-hover-bg: #5f2f41;
+  --close-button-bg: #6b7d70;
+  --close-button-hover-bg: #56645a;
+  --delete-button-bg: #c0392b;
+  --delete-button-hover-bg: #992d22;
+
+  --object-tools-fg: #fff;
+  --object-tools-bg: #6b7d70;
+  --object-tools-hover-bg: #56645a;
+
+  --font-family-primary: 'Manrope', -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+/* Tizim qorong'i rejimda bo'lsa ham xuddi shu yumshoq (och) ko'rinishni saqlaymiz — */
+/* aks holda ba'zi qurilmalarda kontrast yomonlashadi. */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --primary: #3c5844; --secondary: #6b7d70; --accent: #c9a54b; --primary-fg: #fff;
+    --body-fg: #2c2a24; --body-bg: #faf5ee; --body-quiet-color: #6b6558; --body-loud-color: #201f1b;
+    --header-color: #fff; --header-branding-color: #fff; --header-bg: #25392c; --header-link-color: #fff;
+    --breadcrumbs-fg: #e7e2d8; --breadcrumbs-link-fg: #fff; --breadcrumbs-bg: #3c5844;
+    --link-fg: #7d3f55; --link-hover-color: #d1849a; --link-selected-fg: #7d3f55;
+    --hairline-color: #e4ddd0; --border-color: #e4ddd0;
+    --error-fg: #c0392b;
+    --darkened-bg: #f2eade; --selected-bg: #f6ecd9; --selected-row: #fbf6ea;
+    --button-fg: #fff; --button-bg: #3c5844; --button-hover-bg: #2c4433;
+    --default-button-bg: #7d3f55; --default-button-hover-bg: #5f2f41;
+    --close-button-bg: #6b7d70; --close-button-hover-bg: #56645a;
+    --delete-button-bg: #c0392b; --delete-button-hover-bg: #992d22;
+    --object-tools-fg: #fff; --object-tools-bg: #6b7d70; --object-tools-hover-bg: #56645a;
+  }
+}
+
+#header{ border-bottom: 3px solid var(--accent); }
+.module h2, .module caption, .inline-group h2{ background: var(--primary); }
+.button, input[type=submit], input[type=button], .submit-row input, a.button{ border-radius: 6px; }
+div.breadcrumbs{ font-size: .8rem; }
+.tabular tr.form-row{ background: var(--body-bg); }
+.tabular .row1{ background: #fff; }
+.tabular .row2{ background: var(--darkened-bg); }

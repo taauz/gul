@@ -1,0 +1,30 @@
+{% extends "shop/panel/base.html" %}
+{% block panel %}
+<div class="pn-head">
+  <div><h1>{{ cfg.title }}</h1><p class="sub">{{ cfg.hint }} · Jami: {{ items|length }} ta</p></div>
+  <a class="btn primary" href="{% url 'panel_new' key %}">+ Yangi {{ cfg.single }}</a>
+</div>
+
+<div class="cards">
+  {% for it in items %}
+  <article class="p-item {% if not it.active %}off{% endif %}">
+    <div class="p-thumb" data-kind="{{ it.kind }}" data-id="{{ it.pk }}" data-color="{{ it.color }}" data-dark="{{ it.dark }}" data-bg="{{ it.bg }}" data-petals="{{ it.petals }}" data-ribbon="{{ it.ribbon|yesno:'1,0' }}"{% if it.bg %} style="background:{{ it.bg }}"{% endif %}>
+      {% if it.image %}<img src="{{ it.image }}" alt="">{% endif %}
+      {% if it.tag %}<span class="tag">{{ it.tag }}</span>{% endif %}
+    </div>
+    <div class="p-info"><b>{{ it.title }}</b><span>{{ it.sub }}</span>{% if not it.active %}<span class="off-note">Saytda ko'rinmaydi</span>{% endif %}</div>
+    <div class="p-actions">
+      <a class="btn small ghost" href="{% url 'panel_edit' key it.pk %}">Tahrirlash</a>
+      <form method="post" action="{% url 'panel_toggle' key it.pk %}">{% csrf_token %}
+        <button class="btn small ghost" type="submit">{% if it.active %}Yashirish{% else %}Ko'rsatish{% endif %}</button>
+      </form>
+      <form method="post" action="{% url 'panel_delete' key it.pk %}" onsubmit="return confirm('O\'chirilsinmi?')">{% csrf_token %}
+        <button class="btn small danger" type="submit">O'chirish</button>
+      </form>
+    </div>
+  </article>
+  {% empty %}
+  <p class="sub">Hozircha bo'sh. Yuqoridagi tugma orqali qo'shing.</p>
+  {% endfor %}
+</div>
+{% endblock %}
