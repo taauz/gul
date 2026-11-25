@@ -20,7 +20,7 @@ def _load_env():
 _load_env()
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-productionda-almashtiring')
-DEBUG = os.environ.get('DEBUG', '1') == '1'
+DEBUG = os.environ.get('DEBUG', '0' if os.environ.get('RENDER') else '1') == '1'
 ALLOWED_HOSTS = ['*'] if DEBUG else [h for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h]
 render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if render_host:
