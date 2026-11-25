@@ -22,6 +22,10 @@ _load_env()
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-productionda-almashtiring')
 DEBUG = os.environ.get('DEBUG', '1') == '1'
 ALLOWED_HOSTS = ['*'] if DEBUG else [h for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h]
+render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
+    CSRF_TRUSTED_ORIGINS = [f'https://{render_host}']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -35,6 +39,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
